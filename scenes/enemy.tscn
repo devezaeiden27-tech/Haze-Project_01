@@ -1,0 +1,52 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemy.gd" id="1_enemy"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape_enemy"]
+radius = 0.42
+height = 1.8
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_enemy"]
+radius = 0.42
+height = 1.8
+radial_segments = 8
+rings = 4
+
+[sub_resource type="SphereMesh" id="SphereMesh_eye"]
+radius = 0.5
+height = 1.0
+
+[sub_resource type="StandardMaterial3D" id="Material_enemy"]
+albedo_color = Color(0.42, 0.14, 0.12, 1)
+roughness = 0.88
+
+[sub_resource type="StandardMaterial3D" id="Material_eyes"]
+albedo_color = Color(1, 0.42, 0.12, 1)
+emission_enabled = true
+emission = Color(0.55, 0.12, 0.025, 1)
+
+[node name="Enemy" type="CharacterBody3D" groups=["enemies"]]
+collision_layer = 2
+collision_mask = 1
+script = ExtResource("1_enemy")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.92, 0)
+shape = SubResource("CapsuleShape_enemy")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.92, 0)
+mesh = SubResource("CapsuleMesh_enemy")
+surface_material_override/0 = SubResource("Material_enemy")
+
+[node name="EyeLeft" type="MeshInstance3D" parent="."]
+position = Vector3(-0.13, 1.48, -0.36)
+mesh = SubResource("SphereMesh_eye")
+scale = Vector3(0.06, 0.06, 0.06)
+surface_material_override/0 = SubResource("Material_eyes")
+
+[node name="EyeRight" type="MeshInstance3D" parent="."]
+position = Vector3(0.13, 1.48, -0.36)
+mesh = SubResource("SphereMesh_eye")
+scale = Vector3(0.06, 0.06, 0.06)
+surface_material_override/0 = SubResource("Material_eyes")

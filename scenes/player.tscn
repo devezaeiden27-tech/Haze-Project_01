@@ -1,0 +1,97 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scripts/player.gd" id="1_player"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape_player"]
+radius = 0.38
+height = 1.8
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_player"]
+radius = 0.38
+height = 1.8
+radial_segments = 8
+rings = 4
+
+[sub_resource type="BoxMesh" id="BoxMesh_blade"]
+size = Vector3(0.12, 0.75, 0.07)
+
+[sub_resource type="SphereMesh" id="SphereMesh_head"]
+radius = 0.24
+height = 0.48
+
+[sub_resource type="BoxMesh" id="BoxMesh_handle"]
+size = Vector3(0.18, 0.22, 0.14)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape_attack"]
+radius = 0.72
+height = 1.8
+
+[sub_resource type="StandardMaterial3D" id="Material_player"]
+albedo_color = Color(0.16, 0.34, 0.4, 1)
+roughness = 0.72
+
+[sub_resource type="StandardMaterial3D" id="Material_head"]
+albedo_color = Color(0.72, 0.57, 0.39, 1)
+roughness = 0.82
+
+[sub_resource type="StandardMaterial3D" id="Material_blade"]
+albedo_color = Color(0.72, 0.86, 0.88, 1)
+metallic = 0.65
+roughness = 0.28
+
+[sub_resource type="StandardMaterial3D" id="Material_handle"]
+albedo_color = Color(0.28, 0.16, 0.09, 1)
+roughness = 0.85
+
+[node name="Player" type="CharacterBody3D" groups=["player"]]
+collision_layer = 1
+collision_mask = 3
+script = ExtResource("1_player")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.92, 0)
+shape = SubResource("CapsuleShape_player")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.92, 0)
+mesh = SubResource("CapsuleMesh_player")
+surface_material_override/0 = SubResource("Material_player")
+
+[node name="Head" type="MeshInstance3D" parent="."]
+position = Vector3(0, 1.88, 0)
+mesh = SubResource("SphereMesh_head")
+surface_material_override/0 = SubResource("Material_head")
+
+[node name="SwordPivot" type="Node3D" parent="."]
+position = Vector3(0.42, 1.15, -0.12)
+
+[node name="Blade" type="MeshInstance3D" parent="SwordPivot"]
+position = Vector3(0, 0.5, 0)
+mesh = SubResource("BoxMesh_blade")
+surface_material_override/0 = SubResource("Material_blade")
+
+[node name="Handle" type="MeshInstance3D" parent="SwordPivot"]
+position = Vector3(0, 0.04, 0)
+mesh = SubResource("BoxMesh_handle")
+surface_material_override/0 = SubResource("Material_handle")
+
+[node name="CameraPivot" type="Node3D" parent="."]
+position = Vector3(0, 1.5, 0)
+rotation = Vector3(-0.3, 0, 0)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="CameraPivot"]
+spring_length = 5.5
+collision_mask = 1
+
+[node name="Camera3D" type="Camera3D" parent="CameraPivot/SpringArm3D"]
+current = true
+fov = 68.0
+
+[node name="AttackArea" type="Area3D" parent="."]
+position = Vector3(0, 0.95, -1.05)
+collision_layer = 0
+collision_mask = 2
+monitoring = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AttackArea"]
+shape = SubResource("CapsuleShape_attack")
